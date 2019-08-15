@@ -263,13 +263,13 @@ public class SliceHeaderReader {
     private static int[][] readReorderingEntries(BitReader _in) {
         IntArrayList ops = IntArrayList.createIntArrayList();
         IntArrayList args = IntArrayList.createIntArrayList();
-        do {
+        for (int i = 1000; i > 0; i--) {
             int idc = readUEtrace(_in, "SH: reordering_of_pic_nums_idc");
             if (idc == 3)
-                break;
+                return new int[][]{ops.toArray(), args.toArray()};
             ops.add(idc);
             args.add(readUEtrace(_in, "SH: abs_diff_pic_num_minus1"));
-        } while (true);
-        return new int[][] { ops.toArray(), args.toArray() };
+        }
+        throw new IllegalStateException("Possibly corrupted h264 ref_pic_list_reordering entry.");
     }
 }
